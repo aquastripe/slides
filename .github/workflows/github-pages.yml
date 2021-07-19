@@ -39,8 +39,7 @@ jobs:
 
       - name: Build Marp slide deck
         run: |
-          npm run build2
-          python build.py
+          npm run build
           touch ./dist/.nojekyll
         env:
           # Please update URL if you want to use custom domain
