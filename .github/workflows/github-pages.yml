@@ -36,10 +36,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
-          sudo apt-get install libgbm-dev
 
       - name: Build Marp slide deck
         run: |
+          marp --no-stdin content/example/index.md -o dist/example/index2.html
           python build.py
           touch ./dist/.nojekyll
         env:
