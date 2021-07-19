@@ -12,17 +12,25 @@ def main():
     content_dir = Path('content')
     files_in_content_dir = [file for file in content_dir.glob('**/*') if file.is_file()]
     folders_in_content_dir = [file for file in content_dir.glob('**/*') if file.is_dir()]
+    _mkdir_in_dist(folders_in_content_dir)
+
+    for file in files_in_content_dir:
+        _generate_dist(file)
+
+
+def _mkdir_in_dist(folders_in_content_dir):
     for folder in folders_in_content_dir:
         target_path = '/'.join(['dist', *folder.parts[1:]])
         target_path = Path(target_path)
         target_path.mkdir()
 
-    for file in files_in_content_dir:
-        if _is_markdown(file):
-            _marp_og_image(file)
-            _marp_html(file)
-        else:
-            _copy_to_dist(file)
+
+def _generate_dist(file):
+    if _is_markdown(file):
+        _marp_og_image(file)
+        _marp_html(file)
+    else:
+        _copy_to_dist(file)
 
 
 def _is_markdown(file):
@@ -47,6 +55,9 @@ def _marp_og_image(file):
 
 
 def _copy_to_dist(file):
+    if file.name == '.keep':
+        return
+
     target_path = '/'.join(['dist', *file.parts[1:]])
     print(f'cp {str(file)} {target_path}')
     shutil.copyfile(file, target_path)
