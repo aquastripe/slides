@@ -1,6 +1,6 @@
 import shutil
 import subprocess
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.pool import ThreadPool
 from pathlib import Path
 
 
@@ -15,9 +15,10 @@ def main():
     folders_in_content_dir = [file for file in content_dir.glob('**/*') if file.is_dir()]
     _mkdir_in_dist(folders_in_content_dir)
 
-    with ThreadPoolExecutor() as executor:
-        for file in files_in_content_dir:
-            executor.submit(_generate_dist, file)
+    with ThreadPool() as pool:
+        pool.map(_generate_dist, files_in_content_dir)
+
+    print('\033[31mDone.\033[m')
 
 
 def _mkdir_in_dist(folders_in_content_dir):
