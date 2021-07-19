@@ -14,30 +14,30 @@ def main():
     dist_dir.mkdir()
 
     content_dir = Path('content')
-    files_in_content_dir = [file for file in content_dir.glob('**/*')]
+    files_in_content_dir = [file for file in content_dir.glob('**/*') if file.is_file()]
+    folders_in_content_dir = [file for file in content_dir.glob('**/*') if file.is_dir()]
+    for folder in folders_in_content_dir:
+        target_path = '/'.join(['dist', *folder.parts[1:]])
+        target_path = Path(target_path)
+        target_path.mkdir()
 
     for file in files_in_content_dir:
-        if file.is_file():
-            if _is_markdown(file):
-                target_parts = ['dist', *file.parts[1:-1]]
-                og_image_path = '/'.join([*target_parts, 'og-image.jpg'])
-                command = ['marp', str(file), '-o', og_image_path]
-                print(' '.join(command))
-                subprocess.run(command)
+        if _is_markdown(file):
+            target_parts = ['dist', *file.parts[1:-1]]
+            og_image_path = '/'.join([*target_parts, 'og-image.jpg'])
+            command = ['marp', str(file), '-o', og_image_path]
+            print(' '.join(command))
+            subprocess.run(command)
 
-                slides_filename = file.stem + '.html'
-                slides_path = '/'.join([*target_parts, slides_filename])
-                command = ['marp', '--no-stdin', str(file), '-o', slides_path]
-                print(' '.join(command))
-                subprocess.run(command)
-            else:
-                target_path = '/'.join(['dist', *file.parts[1:]])
-                print(f'cp {str(file)} {target_path}')
-                shutil.copyfile(file, target_path)
+            slides_filename = file.stem + '.html'
+            slides_path = '/'.join([*target_parts, slides_filename])
+            command = ['marp', '--no-stdin', str(file), '-o', slides_path]
+            print(' '.join(command))
+            subprocess.run(command)
         else:
             target_path = '/'.join(['dist', *file.parts[1:]])
-            target_path = Path(target_path)
-            target_path.mkdir()
+            print(f'cp {str(file)} {target_path}')
+            shutil.copyfile(file, target_path)
 
 
 if __name__ == '__main__':
