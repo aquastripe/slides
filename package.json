@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "preview": "marp -ps .",
+    "build2": "marp --no-stdin content/example/index.md -o dist/example/index2.html",
     "build": "python build.py"
   },
   "devDependencies": {
