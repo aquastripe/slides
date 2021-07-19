@@ -40,7 +40,7 @@ jobs:
 
       - name: Build Marp slide deck
         run: |
-          python generate_pages.py
+          python build.py
           touch ./dist/.nojekyll
         env:
           # Please update URL if you want to use custom domain
