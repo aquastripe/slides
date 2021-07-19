@@ -1,17 +1,22 @@
 # Marp Pages
 
-A static site generator with Marp.
+Marp Pages is a static site generator with Marp. You can:
+- Make slides using Markdown syntax.
+- Publish slide decks on GitHub Pages automatically with GitHub Actions.
 
 ## Usage
 
 ### Prerequisite
 
-- Install [Node.js](https://nodejs.org/)
-- Install dependency packages
+- [Node.js](https://nodejs.org/)
+- Install dependency packages:
     ```bash
     npm i
     ```
 - Python 3.6+
+
+Make slide decks and put them in the `content/` directory. 
+This work is based on [Marp](https://marp.app/), your slides should follow its settings and dialects.
 
 ### Preview
 
@@ -19,14 +24,9 @@ A static site generator with Marp.
 npm run preview
 ```
 
-### Build
+### Publish on GitHub Pages
 
-```bash
-npm run build
-```
-
-or
-
-```bash
-python build.py
-```
+1. Commit and push to your GitHub repository.
+2. Setup GitHub Pages and change the branch to `gh-pages`:
+    1. Navigate to **Settings/Pages**
+    2. Select **Branch** to `gh-pages` and save.
