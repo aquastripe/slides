@@ -5,7 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "preview": "marp -ps ."
+    "preview": "marp -ps .",
+    "build": "python build.py"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^1.1.1"
