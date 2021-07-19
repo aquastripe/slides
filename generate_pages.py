@@ -3,10 +3,6 @@ import subprocess
 from pathlib import Path
 
 
-def _is_markdown(file):
-    return file.suffix == '.md' or file.suffix == '.MD'
-
-
 def main():
     dist_dir = Path('dist')
     if dist_dir.exists():
@@ -23,21 +19,37 @@ def main():
 
     for file in files_in_content_dir:
         if _is_markdown(file):
-            target_parts = ['dist', *file.parts[1:-1]]
-            og_image_path = '/'.join([*target_parts, 'og-image.jpg'])
-            command = ['marp', str(file), '-o', og_image_path]
-            print(' '.join(command))
-            subprocess.run(command)
-
-            slides_filename = file.stem + '.html'
-            slides_path = '/'.join([*target_parts, slides_filename])
-            command = ['marp', '--no-stdin', str(file), '-o', slides_path]
-            print(' '.join(command))
-            subprocess.run(command)
+            _marp_og_image(file)
+            _marp_html(file)
         else:
-            target_path = '/'.join(['dist', *file.parts[1:]])
-            print(f'cp {str(file)} {target_path}')
-            shutil.copyfile(file, target_path)
+            _copy_to_dist(file)
+
+
+def _is_markdown(file):
+    return file.suffix == '.md' or file.suffix == '.MD'
+
+
+def _marp_html(file):
+    target_parts = ['dist', *file.parts[1:-1]]
+    slides_filename = file.stem + '.html'
+    slides_path = '/'.join([*target_parts, slides_filename])
+    command = ['marp', '--no-stdin', str(file), '-o', slides_path]
+    print(' '.join(command))
+    subprocess.run(command)
+
+
+def _marp_og_image(file):
+    target_parts = ['dist', *file.parts[1:-1]]
+    og_image_path = '/'.join([*target_parts, 'og-image.jpg'])
+    command = ['marp', str(file), '-o', og_image_path]
+    print(' '.join(command))
+    subprocess.run(command)
+
+
+def _copy_to_dist(file):
+    target_path = '/'.join(['dist', *file.parts[1:]])
+    print(f'cp {str(file)} {target_path}')
+    shutil.copyfile(file, target_path)
 
 
 if __name__ == '__main__':
