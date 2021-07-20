@@ -449,3 +449,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/node,python,windows,macos,linux,sublimetext,emacs,vim,visualstudiocode
 {"mode":"full","isActive":false}
+.idea

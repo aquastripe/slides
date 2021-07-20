@@ -44,7 +44,7 @@ def _marp_html(file):
     target_parts = ['dist', *file.parts[1:-1]]
     slides_filename = file.stem + '.html'
     slides_path = '/'.join([*target_parts, slides_filename])
-    command = ['marp', '--no-stdin', str(file), '-o', slides_path]
+    command = ['marp', '--no-stdin', '--html', str(file), '-o', slides_path]
     print(' '.join(command))
     subprocess.run(command)
 
