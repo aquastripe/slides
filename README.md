@@ -30,3 +30,18 @@ npm run preview
 2. Setup GitHub Pages and change the branch to `gh-pages`:
     1. Navigate to **Settings/Pages**
     2. Select **Branch** to `gh-pages` and save.
+
+### Update from this template
+
+1. setup remote repository (once)
+    ```bash
+    git remote add template git@github.com:aquastripe/marp-pages.git
+    ```
+2. update if there are changes in this template
+    ```bash
+    git fetch template main
+    ```
+3. merge them
+    ```bash
+    git merge template/main --allow-unrelated-histories
+    ```
