@@ -383,7 +383,7 @@ li {
 
 ## Training details (2)
 
-Finetuning phase
+Finetuning phase:
 
   - SGD
   - Learning rate: $10^{-5}$
@@ -391,8 +391,8 @@ Finetuning phase
   - Steps:
       - $2,000$ for **ImageNet-10%**
       - $1,000$ for **CIFAR-10** and **SVHN**
-  - Since the amount of labeled examples is limited for all three datasets, we do not use any heldout validation set. 
-  Instead, we return the model at the final checkpoint.
+
+Since the amount of labeled examples is limited for all three datasets, we do not use any heldout validation set. Instead, we return the model at the final checkpoint.
 
 ----
 
@@ -641,7 +641,7 @@ We achieve 86.9% top-1 accuracy on the **ImageNet ILSRVC 2012** validation set w
 ## Related Works
 
 - Pseudo Labels
-- Other self-supervised learning (SSL)
+- Self-supervised learning (SSL)
 - Knowledge Distillation and Label Smoothing
 - Bi-level optimization algorithms
 
@@ -661,7 +661,7 @@ Vanilla **Pseudo Labels** methods keep a pre-trained teacher fixed during the st
 
 ----
 
-## Other SSL (1)
+## SSL (1)
 
 Other typical SSL methods often train a single model by optimizing an objective function that <span style="background-color:LemonChiffon;">combines a supervised loss on labeled data and an unsupervised loss on unlabeled data</span>.
 
@@ -670,7 +670,7 @@ Other typical SSL methods often train a single model by optimizing an objective 
 
 ----
 
-## Other SSL (2) - Self-supervised Losses
+## SSL (2) - Self-supervised Losses
 
 Self-supervised losses typically <span style="background-color:LemonChiffon;">encourage the model to develop a common sense about images</span>, such as 
 
@@ -682,7 +682,7 @@ Self-supervised losses typically <span style="background-color:LemonChiffon;">en
 
 ----
 
-## Other SSL (3) - Label Propagation Losses
+## SSL (3) - Label Propagation Losses
 
 Label propagation losses typically <span style="background-color:LemonChiffon;">enforce that the model is invariant against certain transformations of the data</span> such as 
 
@@ -692,12 +692,12 @@ Label propagation losses typically <span style="background-color:LemonChiffon;">
 
 ----
 
-## Other SSL (4)
+## SSL (4)
 
 **Meta Pseudo Labels** is distinct from the aforementioned SSL methods in two notable ways.
 
-- First, the student in **Meta Pseudo Labels** never learns directly from labeled data, which helps to avoid overfitting, especially when labeled data is limited.
-- Second, the signal that <span style="background-color:LemonChiffon;">the teacher</span> in **Meta Pseudo Labels** <span style="background-color:LemonChiffon;">receives from the student’s performance on labeled data</span> is a novel way of utilizing labeled data.
+- The student in **Meta Pseudo Labels** never learns directly from labeled data, which helps to avoid overfitting, especially when labeled data is limited.
+- The signal that <span style="background-color:LemonChiffon;">the teacher</span> in **Meta Pseudo Labels** <span style="background-color:LemonChiffon;">receives from the student’s performance on labeled data</span> is a novel way of utilizing labeled data.
 
 ----
 
