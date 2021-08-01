@@ -1,5 +1,6 @@
 ---
 marp: true
+math: mathjax
 paginate: true
 style: |
   section {
