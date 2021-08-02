@@ -1,19 +1,11 @@
 ---
 marp: true
-math: mathjax
+math: katex
 paginate: true
-style: |
-  section {
-    justify-content: start;
-    font-family: "Noto Sans"
-  }
+theme: maniac-academic
 ---
 
 <style scoped>
-  h1 {
-    text-align: center;
-    font-size: 70px;
-  }
   p {
     text-align: center;
   }

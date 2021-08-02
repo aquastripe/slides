@@ -1,0 +1,24 @@
+/* 
+ * @theme maniac-academic
+ */
+
+@import 'default';
+
+h1 {
+  text-align: center;
+  font-size: 70px;
+  color: #34495e;
+}
+
+h2 {
+  color: #34495e;
+}
+
+section {
+  justify-content: start;
+  font-family: "Noto Sans", sans-serif
+}
+
+strong {
+  color: #34495e;
+}
