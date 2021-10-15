@@ -68,7 +68,8 @@ https://www.facebook.com/yann.lecun/posts/10157921242067143
 - Asymmetric networks methods
   - not well understood and rely on architectural tricks difficult to interpret
 - Redundancy reduction methods
-  - use one unique objective function
+  - remove redundant information in some input data
+  - W-MSE: requires inverting the covariance matrix of the embeddings and is therefore computationally expensive and unstable
 
 ----
 
