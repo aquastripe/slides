@@ -68,7 +68,7 @@ Self-supervised methods for image representation learning
 
 ![](figures/collapse-problem.png)
 
-<!-- footer: Chen, X., & He, K. (2021). Exploring simple siamese representation learning. In *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition* (pp. 15750-15758). -->
+<!-- _footer: Chen, X., & He, K. (2021). Exploring simple siamese representation learning. In *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition* (pp. 15750-15758). -->
 
 ----
 
@@ -119,21 +119,6 @@ A principle to prevent collapse is to maximize the information content of the em
 - **W-MSE**: An extra module transforms the embeddings into the eigenspace of their covariance matrix (whitening or Karhunen-Loève transform), and forces the vectors thereby obtained to be uniformly distributed on the unit sphere.
 - **Barlow Twins**: A loss term attempts to make the normalized cross-correlation matrix of the embedding vectors from the two branches to be close to the identity.
 - Both methods attempt to produce embedding variables that are decorrelated from each other, thus preventing an informational collapse in which the variables carry redundant information.
-
-----
-
-## Related Work
-
-- Contrastive learning
-  - rely on an expensive mining procedure of negative pairs
-  - are costly and require large batch sizes or memory banks
-- Clustering methods
-  - require negative comparisons at the cluster level
-- Asymmetric networks methods
-  - not well understood and rely on architectural tricks difficult to interpret
-- Redundancy reduction methods
-  - remove redundant information in some input data
-  - W-MSE: requires inverting the covariance matrix of the embeddings and is therefore computationally expensive and unstable
 
 ----
 
@@ -254,12 +239,32 @@ $$
 
 ----
 
+<style scoped>
+p, li {
+  font-size: 85%
+}
+</style>
+
+## Implemetation Details
+
+- $\lambda = 25, \mu = 25, \nu = 1$
+- $\epsilon = 0.0001$
+- The encoder network $f_{\theta}$ is ResNet-50 backbone with 2048 output units.
+- The expander $h_{\phi}$ is composed of two fully-connected layers with batch normalization (BN) and ReLU, and a third linear layer.
+- The sizes of all 3 layers were set to 8192.
+  - As with Barlow Twins, performance improves when the size of the expander layers is larger than the dimension of the representation.
+- LARS optimizer: run for 1000 epochs with a weight decay of $10^{−6}$ and a learning rate $lr = {batch\_size}/256 × base\_lr$, where $batch\_size$ is set to 2048 by default and $base\_lr$ is a base learning rate set to 0.2. 
+  - cosine decay schedule: starting from 0 with 10 warmup epochs and with final value of 0.002.
+
+----
+
 ## Experiments
 
 In this section, we evaluate the representations obtained after self-supervised pretraining of a ResNet50  backbone with VICReg during 1000 epochs, on the training set of ImageNet, using the training protocol described in section 4. We also pretrain and evaluate on the ESC-50 audio classification dataset.
 - Evaluation on ImageNet
 - Transfer learning on downstream tasks
 - Pretraining and evaluation on ESC-50 audio classification
+- Analysis
 
 ----
 
