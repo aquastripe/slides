@@ -1,0 +1,7 @@
+// Please put `.vscode/settings.json` on your workspace
+{
+    "markdown.marp.themes": [
+        "./themes/maniac-academic-1.css",
+        "./themes/maniac-beam.css"
+    ]
+}
