@@ -2,6 +2,7 @@
 marp: true
 paginate: true
 theme: maniac-beam
+math: mathjax
 ---
 <!-- _class: title -->
 
@@ -156,7 +157,7 @@ y &= x * \overline{\boldsymbol{K}} & \quad \text{(3b)} \\
 \end{aligned}
 $$
 
-- Hint: $y_k = \boldsymbol{C} \overline{\boldsymbol{B}} x_k +  \boldsymbol{C} \overline{\boldsymbol{A B}} x_{k-1} + \ldots + \boldsymbol{C} \overline{\boldsymbol{A}}^k \overline{\boldsymbol{B}} x_{0}$
+- Hint: $y_k = \boldsymbol{C} \overline{\boldsymbol{B}} x_0 +  \boldsymbol{C} \overline{\boldsymbol{A B}} x_{1} + \ldots + \boldsymbol{C} \overline{\boldsymbol{A}}^k \overline{\boldsymbol{B}} x_{k}$
 
 ---
 
@@ -251,8 +252,70 @@ For convenience we may also include derivatives of such models, such as those fo
 
 ---
 
-# Selective State Space Models
+# Motivation: Selection as a Means of Compression
 
-Time-varying SSMs cannot use convolutions, presenting a technical challenge of how to compute them efficiently.
+Argument: a fundamental problem of sequence modeling is compressing context into a smaller state.
 
+---
+
+# Motivation: Selection as a Means of Compression
+
+- Transformers
+  - Attention is both effective and inefficient because it explicitly does not compress context at all. 
+  - This can be seen from the fact that autoregressive inference requires explicitly storing the entire context (i.e. the KV cache), which directly causes the slow linear-time inference and quadratic-time training of Transformers. 
+- RNNs
+  - Recurrent models are efficient because they have a finite state, implying constant-time inference and linear-time training. 
+  - However, their effectiveness is limited by how well this state has compressed the context. 
+
+---
+
+# Copying, Selective Copying, and Induction Heads Tasks
+
+![center](figures/2.png)
+- The selective copying task: content-aware reasoning
+- The induction heads task: context-aware reasoning
+
+---
+
+# The Failure Mode of LTI Models
+
+- From the recurrent view, their constant dynamics (e.g. the $(\overline{\boldsymbol{A}}, \overline{\boldsymbol{B}})$ transitions in (2)) cannot let them select the correct information from their context, or affect the hidden state passed along the sequence in an input-dependent way.
+- From the convolutional view, it is known that global convolutions can solve the vanilla Copying task because it only requires time-awareness, but that they have difficulty with the Selective Copying task because of lack of content-awareness (Figure 2). More concretely, the spacing between inputs-to-outputs is varying and cannot be modeled by static convolution kernels.
+
+---
+
+# The Failure Mode of LTI Models
+
+Summary: the efficiency vs. effectiveness tradeoff of sequence models is characterized by how well they compress their state.
+- efficient models must have a small state
+- effective models must have a state that contains all necessary information from the context 
+
+---
+
+# Improving SSMs with Selection
+
+One method of incorporating a selection mechanism into models is by letting their parameters that affect interactions along the sequence be **input-dependent**. 
+- This loses the equivalence to convolutions (3) with implications for its efficiency.
+
+---
+
+# Algorithm: SSM vs. SSM + Selection 
+
+![center](figures/alg-1,2.png)
+- $s_B(x) = \texttt{Linear}_N(x)$
+- $s_C(x) = \texttt{Linear}_N(x)$
+- $s_\Delta(x) = \texttt{Broadcast}_\Delta(\texttt{Linear}_1(x))$
+- $\tau_\Delta = \texttt{softplus}$
+
+---
+
+# Efficient Implementation of Selective SSMs
+
+The selection mechanism is quite natural, and earlier works attempted to incorporate special cases of selection, such as letting $\Delta$ vary over time in recurrent SSMs.
+
+However, as previously mentioned a core limitation in the usage of SSMs is their computational efficiency, which was why S4 and all derivatives used LTI (non-selective) models, most commonly in the form of global convolutions.
+
+---
+
+# 
 
