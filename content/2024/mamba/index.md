@@ -38,7 +38,7 @@ Modern FMs are predominantly based on a single type of sequence model:
 
 # Self-attention
 
-The efficacy of self-attention is attributed to its ability to route information densely within a context window, allowing it to model complex data.
+The efficacy of self-attention is attributed to its ability to route information densely within a **context window**, allowing it to model complex data.
 
 Drawbacks:
 - an inability to model anything outside of a finite window
@@ -77,6 +77,7 @@ We propose a new class of selective state space models, that improves on prior w
 Selective SSMs, and by extension the Mamba architecture, are fully recurrent models with key properties that make them suitable as the backbone of general foundation models operating on sequences.
 
 - High quality
+  - selectivity brings strong performance on dense modalities such as language and genomics
 - Fast training and inference
 - Long context
 
@@ -179,7 +180,10 @@ y &= x * \overline{\boldsymbol{K}} & \quad \text{(3b)} \\
 \end{aligned}
 $$
 
-Commonly, the model uses the convolutional mode (3) for **efficient parallelizable training** (where the whole input sequence is seen ahead of time), and switched into recurrent mode (2) for **efficient autoregressive inference** (where the inputs are seen one timestep at a time). 
+- Convolutional mode: for efficient parallelizable training
+  - where the whole input sequence is seen ahead of time
+- Recurrent mode: for efficient autoregressive inference
+  - where the inputs are seen one timestep at a time
 
 ---
 
@@ -198,9 +202,10 @@ An important property of equations (1) to (3) is that **the model's dynamics are
 
 ---
 
-# Linear Time Invariance
+# Limitations of Linear Time Invariance
 
-All structured SSMs have been LTI (e.g. computed as convolutions) because of fundamental efficiency constraints.
+All structured SSMs have been LTI (e.g. computed as convolutions) because of **fundamental efficiency constraints**.
+- Time-varying SSMs cannot use convolutions.
 
 However, a core insight of this work is that LTI models have fundamental limitations in modeling certain types of data, and our technical contributions involve **removing the LTI constraint while overcoming the efficiency bottlenecks**.
 
@@ -220,28 +225,6 @@ However, a core insight of this work is that LTI models have fundamental limitat
 
 ---
 
-#  General State Space Models
-
-The term state space model has a very broad meaning which simply represents the notion of any recurrent process with a latent state.
-
-It has been used to refer to many disparate concepts in different disciplines, including:
-- Markov decision processes (MDP) (reinforcement learning (Hafner et al. 2020))
-- dynamic causal modeling (DCM) (computational neuroscience (Friston, Harrison, and Penny 2003))
-- Kalman filters (controls (Kalman 1960))
-- hidden Markov models (HMM)
-- linear dynamical systems (LDS) (machine learning)
-- recurrent (and sometimes convolutional) models at large (deep learning)
-
----
-
-#  General State Space Models
-
-Throughout this entire paper we use the term "SSM" to refer exclusively to **the class of structured SSMs or S4 models** and use these terms interchangeably.
-
-For convenience we may also include derivatives of such models, such as those focusing on either the linear-recurrence or global-convolution viewpoints, and clarify nuances when necessary.
-
----
-
 # Outline: Selective State Space Models
 
 - motivation
@@ -254,18 +237,26 @@ For convenience we may also include derivatives of such models, such as those fo
 
 # Motivation: Selection as a Means of Compression
 
-Argument: a fundamental problem of sequence modeling is compressing context into a smaller state.
+Argument: a fundamental problem of sequence modeling is **compressing context into a smaller state**.
 
 ---
 
-# Motivation: Selection as a Means of Compression
+# Compressing Context into a Smaller State
 
 - Transformers
-  - Attention is both effective and inefficient because it explicitly does not compress context at all. 
-  - This can be seen from the fact that autoregressive inference requires explicitly storing the entire context (i.e. the KV cache), which directly causes the slow linear-time inference and quadratic-time training of Transformers. 
+  - Attention is both effective and inefficient because it explicitly **does not compress context** at all.
+  - This can be seen from the fact that autoregressive inference requires explicitly storing the entire context (i.e. the KV cache), which directly causes the slow **linear-time inference** and **quadratic-time training** of Transformers.
 - RNNs
-  - Recurrent models are efficient because they have a finite state, implying constant-time inference and linear-time training. 
-  - However, their effectiveness is limited by how well this state has compressed the context. 
+  - Recurrent models are efficient because they have a finite state, implying **constant-time inference** and **linear-time training**.
+  - However, their effectiveness is limited by how well this state has compressed the context.
+
+<!-- 
+Complexity:
+* Transformer = linear time
+* RNN = constant time
+這裡指的應該是計算下一個 step 的計算量
+RNN 只會從當前的 state 開始計算，因此只要 constant time complexity
+-->
 
 ---
 
@@ -315,7 +306,13 @@ The selection mechanism is quite natural, and earlier works attempted to incorpo
 
 However, as previously mentioned a core limitation in the usage of SSMs is their computational efficiency, which was why S4 and all derivatives used LTI (non-selective) models, most commonly in the form of global convolutions.
 
+The selection mechanism is designed to overcome the limitations of LTI models; at the same time, we therefore need to revisit the computation problem of SSMs.
+
 ---
 
-# 
+# Observations
 
+- The naive recurrent computation uses $O(BLDN)$ FLOPs while the convolutional computation uses $O(BLD \log (L))$ FLOPs, and the former has a lower constant factor.
+  - Thus for long sequences and not-too-large state dimension $N$, the recurrent mode can actually use fewer FLOPs.
+- The two challenges are the sequential nature of recurrence, and the large memory usage.
+  - To address the latter, just like the convolutional mode, we can attempt to not actually materialize the full state $h$.
