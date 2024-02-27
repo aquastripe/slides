@@ -1,3 +1,6 @@
+*.pdf
+*.html
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,python,windows,macos,linux,sublimetext,emacs,vim,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,windows,macos,linux,sublimetext,emacs,vim,visualstudiocode
