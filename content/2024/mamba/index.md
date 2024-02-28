@@ -312,7 +312,9 @@ The selection mechanism is designed to overcome the limitations of LTI models; a
 
 # Observations
 
-- The naive recurrent computation uses $O(BLDN)$ FLOPs while the convolutional computation uses $O(BLD \log (L))$ FLOPs, and the former has a lower constant factor.
-  - Thus for long sequences and not-too-large state dimension $N$, the recurrent mode can actually use fewer FLOPs.
+- Computation complexity
+  - recurrent: $O(BLDN)$ FLOPs -> lower constant factor
+  - convolutional: $O(BLD \log (L))$ FLOPs
+- Thus for long sequences and not-too-large state dimension $N$, the recurrent mode can actually use fewer FLOPs.
 - The two challenges are the sequential nature of recurrence, and the large memory usage.
   - To address the latter, just like the convolutional mode, we can attempt to not actually materialize the full state $h$.
