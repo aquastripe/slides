@@ -18,7 +18,7 @@ Presenter: Hao-Ting Li (李皓庭)
 
 # Table of Contents
 
-- Introduction
+- **Introduction**
 - State Space Models
 - Selective State Space Models
 - Empirical Evaluation
@@ -47,6 +47,13 @@ Drawbacks:
 An enormous body of research has appeared on more efficient variants of attention to overcome these drawbacks, but often at the expense of the very properties that makes it effective. 
 - As of yet, none of these variants have been shown to be empirically effective at scale across domains.
 
+<!-- 
+efficacy: /ˈefəkəsi/
+
+context window: the maximum sequence length that a transformer can process at a time
+
+ -->
+
 ---
 
 # Structured State Space Sequence Models (SSMs)
@@ -74,23 +81,21 @@ We propose a new class of selective state space models, that improves on prior w
 
 # Contributions
 
-Selective SSMs, and by extension the Mamba architecture, are fully recurrent models with key properties that make them suitable as the backbone of general foundation models operating on sequences.
+Selective SSMs, and by extension the Mamba architecture, are **fully recurrent models** with key properties that make them suitable as the backbone of general foundation models operating on sequences.
 
 - High quality
-  - selectivity brings strong performance on dense modalities such as language and genomics
 - Fast training and inference
 - Long context
 
 ---
 
-# Contributions
+# Table of Contents
 
-- High quality
-    - Selectivity brings strong performance on dense modalities such as language and genomics. 
-- Fast training and inference
-    - Computation and memory scales linearly in sequence length during training, and unrolling the model autoregressively during inference requires only constant time per step since it does not require a cache of previous elements. 
-- Long context
-    - The quality and efficiency together yield performance improvements on real data up to sequence length 1M.
+- Introduction
+- **State Space Models**
+- Selective State Space Models
+- Empirical Evaluation
+- Conclusion & Summary
 
 ---
 
@@ -213,7 +218,7 @@ However, a core insight of this work is that LTI models have fundamental limitat
 
 # Structure and Dimensions
 
-- $\boldsymbol{A} \in \mathbb{R}^{N \times N}$, **diagonal matrix**
+- $\boldsymbol{A} \in \mathbb{R}^{N \times N}$
 - $\boldsymbol{B} \in \mathbb{R}^{N \times 1}$
 - $\boldsymbol{C} \in \mathbb{R}^{1 \times N}$
 - Input $x$
@@ -222,6 +227,16 @@ However, a core insight of this work is that LTI models have fundamental limitat
   - channels $D$
 - Hidden state: $DN$ per input
 - Computation complexity: $O(BLDN)$
+
+---
+
+# Table of Contents
+
+- Introduction
+- State Space Models
+- **Selective State Space Models**
+- Empirical Evaluation
+- Conclusion & Summary
 
 ---
 
@@ -235,7 +250,7 @@ However, a core insight of this work is that LTI models have fundamental limitat
 
 ---
 
-# Motivation: Selection as a Means of Compression
+# Motivation
 
 Argument: a fundamental problem of sequence modeling is **compressing context into a smaller state**.
 
@@ -244,7 +259,7 @@ Argument: a fundamental problem of sequence modeling is **compressing context in
 # Compressing Context into a Smaller State
 
 - Transformers
-  - Attention is both effective and inefficient because it explicitly **does not compress context** at all.
+  - Attention is both **effective and inefficient** because it explicitly **does not compress context** at all.
   - This can be seen from the fact that autoregressive inference requires explicitly storing the entire context (i.e. the KV cache), which directly causes the slow **linear-time inference** and **quadratic-time training** of Transformers.
 - RNNs
   - Recurrent models are efficient because they have a finite state, implying **constant-time inference** and **linear-time training**.
@@ -262,7 +277,7 @@ RNN 只會從當前的 state 開始計算，因此只要 constant time complexit
 
 # Copying, Selective Copying, and Induction Heads Tasks
 
-![center](figures/2.png)
+![center](figures/1.png)
 - The selective copying task: content-aware reasoning
 - The induction heads task: context-aware reasoning
 
@@ -270,16 +285,16 @@ RNN 只會從當前的 state 開始計算，因此只要 constant time complexit
 
 # The Failure Mode of LTI Models
 
-- From the recurrent view, their constant dynamics (e.g. the $(\overline{\boldsymbol{A}}, \overline{\boldsymbol{B}})$ transitions in (2)) cannot let them select the correct information from their context, or affect the hidden state passed along the sequence in an input-dependent way.
-- From the convolutional view, it is known that global convolutions can solve the vanilla Copying task because it only requires time-awareness, but that they have difficulty with the Selective Copying task because of lack of content-awareness (Figure 2). More concretely, the spacing between inputs-to-outputs is varying and cannot be modeled by static convolution kernels.
+- From the recurrent view, their **constant** dynamics (e.g. the $(\overline{\boldsymbol{A}}, \overline{\boldsymbol{B}})$ transitions in (2)) cannot let them select the correct information from their context, or affect the hidden state passed along the sequence in an input-dependent way.
+- From the convolutional view, it is known that global convolutions can solve the vanilla Copying task because it only requires time-awareness, but that they have difficulty with the Selective Copying task because of lack of content-awareness. More concretely, the spacing between inputs-to-outputs is varying and cannot be modeled by static convolution kernels.
 
 ---
 
 # The Failure Mode of LTI Models
 
-Summary: the efficiency vs. effectiveness tradeoff of sequence models is characterized by how well they compress their state.
-- efficient models must have a small state
-- effective models must have a state that contains all necessary information from the context 
+Summary: The efficiency vs. effectiveness tradeoff of sequence models is characterized by how well they compress their state.
+- Efficient models must have a small state.
+- Effective models must have a state that contains all necessary information from the context.
 
 ---
 
@@ -302,19 +317,225 @@ One method of incorporating a selection mechanism into models is by letting thei
 
 # Efficient Implementation of Selective SSMs
 
-The selection mechanism is quite natural, and earlier works attempted to incorporate special cases of selection, such as letting $\Delta$ vary over time in recurrent SSMs.
+Earlier works attempted to incorporate special cases of selection.
+- e.g. letting $\Delta$ vary over time in recurrent SSMs
 
 However, as previously mentioned a core limitation in the usage of SSMs is their computational efficiency, which was why S4 and all derivatives used LTI (non-selective) models, most commonly in the form of global convolutions.
 
-The selection mechanism is designed to overcome the limitations of LTI models; at the same time, we therefore need to revisit the computation problem of SSMs.
+The selection mechanism is designed to overcome the limitations of LTI models.
 
 ---
 
-# Observations
+# Efficient Implementation: Observations
 
 - Computation complexity
-  - recurrent: $O(BLDN)$ FLOPs -> lower constant factor
-  - convolutional: $O(BLD \log (L))$ FLOPs
-- Thus for long sequences and not-too-large state dimension $N$, the recurrent mode can actually use fewer FLOPs.
+  - recurrent: $O(BLDN)$ FLOPs $\rightarrow$ lower constant factor
+  - convolutional: $O(BLD \log L)$ FLOPs
+  - Thus for long sequences and not-too-large state dimension $N$, the recurrent mode can actually use fewer FLOPs.
 - The two challenges are the sequential nature of recurrence, and the large memory usage.
   - To address the latter, just like the convolutional mode, we can attempt to not actually materialize the full state $h$.
+
+---
+
+# Efficient Implementation: Main Idea
+
+The main idea is to leverage properties of modern accelerators (GPUs) to materialize the state $h$ only in more efficient levels of the memory hierarchy.
+- Most operations (except matrix multiplication) are bounded by **memory bandwidth**.
+- This includes our scan operation, and we use **kernel fusion to reduce the amount of memory IOs**, leading to a significant speedup compared to a standard implementation.
+  - scan: recurrent operation
+
+---
+
+# Efficient Implementation: Parallel Scan
+
+Concretely, instead of preparing the scan input $(\overline{\boldsymbol{A}}, \overline{\boldsymbol{B}})$ of size $(\texttt{B}, \texttt{L}, \texttt{D}, \texttt{N})$ in GPU HBM (high-bandwidth memory),
+1. we load the SSM parameters $(\Delta, \boldsymbol{A}, \boldsymbol{B}, \boldsymbol{C})$ directly from slow HBM to fast SRAM
+2. perform the discretization and recurrence in SRAM
+3. and then write the final outputs of size $(\texttt{B}, \texttt{L}, \texttt{D})$ back to HBM
+
+To avoid the sequential recurrence, we observe that despite not being linear it can still be **parallelized** with a work-efficient parallel scan algorithm.
+
+---
+
+# Efficient Implementation: Recomputation
+
+Finally, we must also avoid saving the intermediate states, which are necessary for backpropagation. 
+- We carefully apply the classic technique of recomputation to reduce the memory requirements: **the intermediate states are not stored but recomputed in the backward pass when the inputs are loaded from HBM to SRAM**.
+- As a result, the fused selective scan layer has the same memory requirements as an optimized transformer implementation with **FlashAttention**. (Appendix D)
+
+---
+
+# Mamba: A Simplified SSM Architecture
+
+![center](figures/2.png)
+
+---
+
+# Mamba: A Simplified SSM Architecture
+
+- This architecture involves expanding the model dimension $D$ by a controllable expansion factor $E$. ($E=2$ in experiments)
+- Most of the parameters $(3ED^2)$ are in the linear projections 
+  - $2ED^2$ for input projections
+  - $ED^2$ for output projection
+- The inner SSM contributes less parameters.
+
+<!-- 
+缺乏說明 motivation?
+ -->
+
+---
+
+# Properties of Selection Mechanisms
+
+Properties
+- Connection to Gating Mechanisms
+- Interpretation of Selection Mechanisms
+  - Variable spacing
+  - Filtering context
+
+---
+
+# Theorem 1: Connection to Gating Mechanisms
+
+When $N=1$, $A=-1$, $B=1$, $s_\Delta=\texttt{Linear}(x)$, and $\tau_\Delta = \texttt{softplus}$, then the selective SSM recurrence (Algorithm 2) takes the form
+
+$$
+\begin{aligned}
+& g_k=\sigma\left(\texttt{Linear}\left(x_k\right)\right) \\
+& h_k=\left(1-g_k\right) h_{k-1}+g_k x_k. \quad \text(5)
+\end{aligned}
+$$
+
+- $g$: the gate
+
+([softplus](https://pytorch.org/docs/stable/_images/Softplus.png))
+
+---
+
+# Variable Spacing
+
+- Selectivity allows filtering out irrelevant noise tokens that may occur between inputs of interest.
+- This is exemplified by the Selective Copying task, but occurs ubiquitously in common data modalities, particularly for discrete data — for example the presence of language fillers such as “um”. 
+- This property arises because the model can mechanistically filter out any particular input $x_k$, for example in the gated RNN case (Theorem 1) when $g_k \rightarrow 0$.
+
+---
+
+# Filtering Context
+
+- It has been empirically observed that many sequence models do not improve with longer context, despite the principle that more context should lead to strictly better performance.
+- An explanation is that **many sequence models cannot effectively ignore irrelevant context when necessary**; an intuitive example are global convolutions (and general LTI models).
+- On the other hand, selective models can simply **reset their state at any time to remove extraneous history**, and thus their performance in principle improves monotonicly with context length.
+
+---
+
+# Table of Contents
+
+- Introduction
+- State Space Models
+- Selective State Space Models
+- **Empirical Evaluation**
+- Conclusion & Summary
+
+---
+
+# Empirical Evaluation
+
+- Synthetic tasks
+- Language Modeling
+- DNA Modeling
+- Audio
+
+---
+
+# Synthetic Tasks
+
+![bg 70%](tables/1.png)
+![bg 100%](figures/3.png)
+
+<!-- 
+Hyena /haɪˈiːnə/
+ -->
+
+---
+
+# Language Modeling: Scaling Laws
+
+![](figures/4.png)
+
+---
+
+# Language Modeling: Downstream Evaluations
+
+![bg 75%](tables/2.png)
+
+---
+
+# DNA Modeling
+
+![](figures/5.png)
+
+---
+
+# DNA Classification
+
+![bg 55%](figures/6.png)
+
+---
+
+# Audio Modeling and Generation
+
+For the audio waveform modality, we compare primarily to the SaShiMi architecture and training protocols (Goel et al., 2022).
+
+The architecture is a UNet with alternating S4 and MLP blocks, which we consider replacing with Mamba.
+
+---
+
+# Long-Context Autoregressive Pretraining
+
+![bg 55%](figures/7.png)
+
+---
+
+# Autoregressive Speech Generation
+
+![](tables/3,4.png)
+
+---
+
+# Speed and Memory Benchmark
+
+![](figures/8.png)
+- Scan: 20-40$\times$ PyTorch implementation
+- Mamba: 4-5$\times$ higher inference throughput than a Transformer of similar size
+
+---
+
+# Table of Contents
+
+- Introduction
+- State Space Models
+- Selective State Space Models
+- Empirical Evaluation
+- **Conclusion & Summary**
+
+---
+
+# Conclusion
+
+- We introduce a **selection mechanism** to structured state space models, allowing them to perform context-dependent reasoning while scaling linearly in sequence length.
+- When incorporated into a simple attention-free architecture, **Mamba achieves state-of-the-art results** on a diverse set of domains: most notably language, where it matches or exceeds the performance of strong Transformer models. 
+- We are excited about the **broad applications** of selective state space models to build foundation models for different domains, especially in emerging modalities requiring long context such as genomics, audio, and video.
+- Our results suggest that Mamba is a strong candidate to be a **general sequence model backbone**.
+
+---
+
+# Summary
+
+- An RNN-like foundation model (based on SSM)
+- A new architecture (Mamba block)
+- Selection mechanism for SSM
+  - = gating mechanism in RNNs (e.g. LSTM)
+- Hardware acceleration
+  - IO bound
+- Experimental results
+  - linear scaling (performance vs. # parameters)
