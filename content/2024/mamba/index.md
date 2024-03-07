@@ -172,8 +172,8 @@ $$
 **Linear recurrence**:
 $$
 \begin{aligned}
-h_t &= \overline{\boldsymbol{A}} h_{t-1}+\overline{\boldsymbol{B}} x_t & \quad \text{(2a)} \\
-y_t & = \boldsymbol{C} h_t & \quad \text{(2b)} \\
+h_k &= \overline{\boldsymbol{A}} h_{k-1}+\overline{\boldsymbol{B}} x_k & \quad \text{(2a)} \\
+y_k & = \boldsymbol{C} h_k & \quad \text{(2b)} \\
 \end{aligned}
 $$
 
