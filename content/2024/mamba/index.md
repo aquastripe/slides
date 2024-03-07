@@ -150,8 +150,8 @@ After the parameters have been transformed from $(\Delta, \boldsymbol{A}, \bolds
 **Linear recurrence**:
 $$
 \begin{aligned}
-h_t &= \overline{\boldsymbol{A}} h_{t-1}+\overline{\boldsymbol{B}} x_t & \quad \text{(2a)} \\
-y_t & = \boldsymbol{C} h_t & \quad \text{(2b)} \\
+h_k &= \overline{\boldsymbol{A}} h_{k-1}+\overline{\boldsymbol{B}} x_k & \quad \text{(2a)} \\
+y_k & = \boldsymbol{C} h_k & \quad \text{(2b)} \\
 \end{aligned}
 $$
 
@@ -221,7 +221,7 @@ However, a core insight of this work is that LTI models have fundamental limitat
 - $\boldsymbol{A} \in \mathbb{R}^{N \times N}$
 - $\boldsymbol{B} \in \mathbb{R}^{N \times 1}$
 - $\boldsymbol{C} \in \mathbb{R}^{1 \times N}$
-- Input $x$
+- Input: $x$
   - batch size $B$
   - length $L$
   - channels $D$
@@ -237,16 +237,6 @@ However, a core insight of this work is that LTI models have fundamental limitat
 - **Selective State Space Models**
 - Empirical Evaluation
 - Conclusion & Summary
-
----
-
-# Outline: Selective State Space Models
-
-- motivation
-- explanation of incorporating this mechanism into state space models
-- overcoming the efficiency challenge with a  hardware-aware algorithm
-- a simple SSM architecture without attention or even MLP blocks
-- additional properties of selection mechanisms
 
 ---
 
@@ -343,6 +333,7 @@ The main idea is to leverage properties of modern accelerators (GPUs) to materia
 - Most operations (except matrix multiplication) are bounded by **memory bandwidth**.
 - This includes our scan operation, and we use **kernel fusion to reduce the amount of memory IOs**, leading to a significant speedup compared to a standard implementation.
   - scan: recurrent operation
+  - kernel fusion: combining several operators into a single kernel to avoid per-op overhead [[How PyTorch Optimizes Deep Learning Computations](https://web.stanford.edu/class/cs245/win2020/slides/09-PyTorch.pdf)]
 
 ---
 
@@ -371,7 +362,7 @@ Finally, we must also avoid saving the intermediate states, which are necessary 
 
 ---
 
-# Mamba: A Simplified SSM Architecture
+# Mamba: Number of Parameters
 
 - This architecture involves expanding the model dimension $D$ by a controllable expansion factor $E$. ($E=2$ in experiments)
 - Most of the parameters $(3ED^2)$ are in the linear projections 
@@ -422,7 +413,7 @@ $$
 
 # Filtering Context
 
-- It has been empirically observed that many sequence models do not improve with longer context, despite the principle that more context should lead to strictly better performance.
+- It has been empirically observed that **many sequence models do not improve with longer context**, despite the principle that more context should lead to strictly better performance.
 - An explanation is that **many sequence models cannot effectively ignore irrelevant context when necessary**; an intuitive example are global convolutions (and general LTI models).
 - On the other hand, selective models can simply **reset their state at any time to remove extraneous history**, and thus their performance in principle improves monotonicly with context length.
 
