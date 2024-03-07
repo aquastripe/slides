@@ -10,7 +10,11 @@
 
 ### 2022
 
-- [Grid Anchor based Image Cropping: A New Benchmark and An Efficient Model, TPAMI 2020](2022/grid-anchor-based-image-cropping)
+- [Grid Anchor based Image Cropping: A New Benchmark and An Efficient Model, TPAMI 2020](https://aquastripe.github.io/slides/2022/grid-anchor-based-image-cropping)
+
+### 2024
+
+- [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://aquastripe.github.io/slides/2024/mamba/)
 
 ## Training Courses
 
