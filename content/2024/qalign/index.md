@@ -255,7 +255,7 @@ $$
 
 ---
 
-# Conversation Formats
+# Examples of Conversation Formats
 
 - Image Quality Assessment (IQA)
   ```
