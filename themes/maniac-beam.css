@@ -7,7 +7,7 @@
 @import "default";
 
 :root {
-  font-family: Inter, "Noto Sans TC", sans-serif;
+  font-family: "Times New Roman", "Noto Serif TC", Inter, "Noto Sans TC", sans-serif;
   --main: #1f38c5;
   --secondary: #141414;
 }
