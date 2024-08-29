@@ -15,6 +15,7 @@ $^1$Nanyang Technological University $^2$Shanghai Jiao Tong University $^3$Sense
 **ICML 2024**
 
 Presenter: Hao-Ting Li (李皓庭)
+Link: https://aquastripe.github.io/slides/2024/Q-Align/
 
 ---
 

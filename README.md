@@ -15,7 +15,7 @@
 ### 2024
 
 - [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://aquastripe.github.io/slides/2024/mamba/)
-- [Q-Align: Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels](https://aquastripe.github.io/slides/2024/qalign/)
+- [Q-Align: Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels](https://aquastripe.github.io/slides/2024/Q-Align/)
 
 ## Training Courses
 
