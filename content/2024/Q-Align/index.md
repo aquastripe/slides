@@ -5,6 +5,11 @@ theme: maniac-beam
 math: mathjax
 ---
 <!-- _class: title -->
+<style scoped>
+p {
+  font-size: 26px;
+}
+</style>
 
 # <!-- fit --> Q-Align: Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels
 
