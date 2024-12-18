@@ -16,6 +16,7 @@
 
 - [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://aquastripe.github.io/slides/2024/mamba/)
 - [Q-Align: Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels](https://aquastripe.github.io/slides/2024/Q-Align/)
+- [BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models, ICML 2023](https://aquastripe.github.io/slides/2024/BLIP-2)
 
 ## Training Courses
 
