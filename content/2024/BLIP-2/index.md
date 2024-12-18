@@ -30,28 +30,28 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 
 # Task: Vision-Language Models
 
-* Most state-of-the-art vision-language models incur a **high computation cost** during pre-training, due to end-to-end training using large-scale models and datasets.
-* Vision-language research sits at the intersection between vision and language, therefore it is naturally expected that vision-language models can harvest from the **readily available unimodal models** from the vision and natural language communities. 
-* In this paper, we propose a generic and compute-efficient VLP method by bootstrapping from **off-the-shelf** pre-trained vision models and language models.
-  * Pre-trained vision models offer high-quality visual representation. 
-  * Pre-trained language models, in particular large language models (LLMs), offer strong language generation and zero-shot transfer abilities. 
-  * To reduce computation cost and counteract the issue of catastrophic forgetting, the unimodal pre-trained models **remain frozen during the pre-training**.
+- Most state-of-the-art vision-language models incur a **high computation cost** during pre-training, due to end-to-end training using large-scale models and datasets.
+- Vision-language research sits at the intersection between vision and language, therefore it is naturally expected that vision-language models can harvest from the **readily available unimodal models** from the vision and natural language communities. 
+- In this paper, we propose a generic and compute-efficient VLP method by bootstrapping from **off-the-shelf** pre-trained vision models and language models.
+  - Pre-trained vision models offer high-quality visual representation. 
+  - Pre-trained language models, in particular large language models (LLMs), offer strong language generation and zero-shot transfer abilities. 
+  - To reduce computation cost and counteract the issue of catastrophic forgetting, the unimodal pre-trained models **remain frozen during the pre-training**.
 
 ----
 
 # Cross-Modal Alignment
 
-* In order to leverage pre-trained unimodal models for VLP, it is key to facilitate **cross-modal alignment**.
-* However, since **LLMs have not seen images** during their unimodal pre-training, freezing them makes vision-language alignment in particular challenging. 
-* In this regard, existing methods (e.g. Frozen (Tsimpoukelli et al., 2021), Flamingo (Alayrac et al., 2022)) resort to an **image-to-text generation loss**, which we show is insufficient to bridge the modality gap.
+- In order to leverage pre-trained unimodal models for VLP, it is key to facilitate **cross-modal alignment**.
+- However, since **LLMs have not seen images** during their unimodal pre-training, freezing them makes vision-language alignment in particular challenging. 
+- In this regard, existing methods (e.g. Frozen (Tsimpoukelli et al., 2021), Flamingo (Alayrac et al., 2022)) resort to an **image-to-text generation loss**, which we show is insufficient to bridge the modality gap.
 
 ----
 
 # Q-Former
 
-* To achieve effective vision-language alignment with frozen unimodal models, we propose a Querying Transformer (Q-Former) pre-trained with a new two-stage pre-training strategy.
-  * In the first pre-training stage, we perform **vision-language representation learning** which enforces the Q-Former to learn visual representation most relevant to the text.
-  * In the second pre-training stage, we perform **vision-to-language generative learning** by connecting the output of the Q-Former to a frozen LLM, and trains the Q-Former such that its output visual representation can be interpreted by the LLM.
+- To achieve effective vision-language alignment with frozen unimodal models, we propose a Querying Transformer (Q-Former) pre-trained with a new two-stage pre-training strategy.
+  - In the first pre-training stage, we perform **vision-language representation learning** which enforces the Q-Former to learn visual representation most relevant to the text.
+  - In the second pre-training stage, we perform **vision-to-language generative learning** by connecting the output of the Q-Former to a frozen LLM, and trains the Q-Former such that its output visual representation can be interpreted by the LLM.
 
 ----
 
@@ -60,46 +60,46 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 ![center width: 400](figures/1.png)
 
 <!-- 
-* Q-Former:
-  * a lightweight Transformer
-  * a set of learnable query vectors to extract visual features from the frozen image encoder
-    * an information bottlenect between the frozen image encoder and the frozen LLM
+- Q-Former:
+  - a lightweight Transformer
+  - a set of learnable query vectors to extract visual features from the frozen image encoder
+    - an information bottlenect between the frozen image encoder and the frozen LLM
  -->
 
 ----
 
 # The Key Advantages of BLIP-2 (1/2)
 
-* BLIP-2 effectively leverages both frozen pre-trained image models and language models. 
-  * We **bridge the modality gap** using a Q-Former pre-trained in two-stages: representation learning stage and generative learning stage. 
-  * BLIP-2 **achieves state-of-the-art performance** on various vision-language tasks including visual question answering, image captioning, and image-text retrieval.
-* Powered by LLMs (e.g. OPT (Zhang et al., 2022), FlanT5 (Chung et al., 2022)), BLIP-2 can be prompted to perform **zero-shot image-to-text generation** that follows natural language instructions, which enables emerging capabilities such as visual knowledge reasoning, visual conversation, etc. (see Figure 4 for examples)
+- BLIP-2 effectively leverages both frozen pre-trained image models and language models. 
+  - We **bridge the modality gap** using a Q-Former pre-trained in two-stages: representation learning stage and generative learning stage. 
+  - BLIP-2 **achieves state-of-the-art performance** on various vision-language tasks including visual question answering, image captioning, and image-text retrieval.
+- Powered by LLMs (e.g. OPT (Zhang et al., 2022), FlanT5 (Chung et al., 2022)), BLIP-2 can be prompted to perform **zero-shot image-to-text generation** that follows natural language instructions, which enables emerging capabilities such as visual knowledge reasoning, visual conversation, etc. (see Figure 4 for examples)
 
 ----
 
 # The Key Advantages of BLIP-2 (2/2)
 
-* Due to the use of frozen unimodal models and a lightweight Q-Former, BLIP-2 is more **compute-efficient** than exisiting state-of-the-arts. 
-  * For example, BLIP-2 outperforms Flamingo (Alayrac et al., 2022) by 8.7% on zero-shot VQAv2, while using 54× fewer trainable parameters. 
-  * Furthermore, our results show that BLIP-2 is a generic method that can harvest more advanced unimodal models for better VLP performance.
+- Due to the use of frozen unimodal models and a lightweight Q-Former, BLIP-2 is more **compute-efficient** than exisiting state-of-the-arts. 
+  - For example, BLIP-2 outperforms Flamingo (Alayrac et al., 2022) by 8.7% on zero-shot VQAv2, while using 54× fewer trainable parameters. 
+  - Furthermore, our results show that BLIP-2 is a generic method that can harvest more advanced unimodal models for better VLP performance.
 
 ---
 
 # Related Work
 
-* End-to-end Vision-Language Pre-training
-* Modular Vision-Language Pre-training
+- End-to-end Vision-Language Pre-training
+- Modular Vision-Language Pre-training
 
 ----
 
 # End-to-end Vision-Language Pre-training (1/2)
 
-* Vision-language pre-training aims to learn multimodal foundation models with improved performance on various visionand-language tasks. 
-* Depending on the downstream task, different model architectures have been proposed
-  * the dual-encoder architecture (Radford et al., 2021; Jia et al., 2021)
-  * the fusion-encoder architecture (Tan & Bansal, 2019; Li et al., 2021)
-  * the encoder-decoder architecture (Cho et al., 2021; Wang et al., 2021b; Chen et al., 2022b)
-  * the unified transformer architecture (Li et al., 2022; Wang et al., 2022b) 
+- Vision-language pre-training aims to learn multimodal foundation models with improved performance on various visionand-language tasks. 
+- Depending on the downstream task, different model architectures have been proposed
+  - the dual-encoder architecture (Radford et al., 2021; Jia et al., 2021)
+  - the fusion-encoder architecture (Tan & Bansal, 2019; Li et al., 2021)
+  - the encoder-decoder architecture (Cho et al., 2021; Wang et al., 2021b; Chen et al., 2022b)
+  - the unified transformer architecture (Li et al., 2022; Wang et al., 2022b) 
 
 ----
 
@@ -111,33 +111,33 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 
 # End-to-end Vision-Language Pre-training (2/2)
 
-* Various **pre-training objectives** have also been proposed over the years, and have progressively converged to a few time-tested ones: 
-  * image-text contrastive learning (Radford et al., 2021; Yao et al., 2022; Li et al., 2021; 2022)
-  * image-text matching (Li et al., 2021; 2022; Wang et al., 2021a)
-  * (masked) language modeling (Li et al., 2021; 2022; Yu et al., 2022; Wang et al., 2022b)
-* Most VLP methods perform end-to-end pre-training using large-scale **image-text pair datasets**. 
-  * As the model size keeps increasing, the pre-training can incur an extremely **high computation cost**. 
-  * Moreover, it is **inflexible** for end-to-end pre-trained models to leverage readily-available unimodal pre-trained models, such as LLMs (Brown et al., 2020; Zhang et al., 2022; Chung et al., 2022).
+- Various **pre-training objectives** have also been proposed over the years, and have progressively converged to a few time-tested ones: 
+  - image-text contrastive learning (Radford et al., 2021; Yao et al., 2022; Li et al., 2021; 2022)
+  - image-text matching (Li et al., 2021; 2022; Wang et al., 2021a)
+  - (masked) language modeling (Li et al., 2021; 2022; Yu et al., 2022; Wang et al., 2022b)
+- Most VLP methods perform end-to-end pre-training using large-scale **image-text pair datasets**. 
+  - As the model size keeps increasing, the pre-training can incur an extremely **high computation cost**. 
+  - Moreover, it is **inflexible** for end-to-end pre-trained models to leverage readily-available unimodal pre-trained models, such as LLMs (Brown et al., 2020; Zhang et al., 2022; Chung et al., 2022).
 
 ----
 
 # Modular Vision-Language Pre-training (1/2)
 
-* More similar to us are methods that leverage **off-the-shelf pre-trained models** and keep them frozen during VLP. 
-* Some methods **freeze the image encoder** 
-  * the early work which adopts a frozen object detector to extract visual features (Chen et al., 2020; Li et al., 2020; Zhang et al., 2021)
-  * LiT (Zhai et al., 2022) which uses a frozen pre-trained image encoder for CLIP (Radford et al., 2021) pre-training
-* Some methods **freeze the language model** to use the knowledge from LLMs for vision-to-language generation tasks (Tsimpoukelli et al., 2021; Alayrac et al., 2022; Chen et al., 2022a; Tiong et al., 2022; Guo et al., 2022). 
+- More similar to us are methods that leverage **off-the-shelf pre-trained models** and keep them frozen during VLP. 
+- Some methods **freeze the image encoder** 
+  - the early work which adopts a frozen object detector to extract visual features (Chen et al., 2020; Li et al., 2020; Zhang et al., 2021)
+  - LiT (Zhai et al., 2022) which uses a frozen pre-trained image encoder for CLIP (Radford et al., 2021) pre-training
+- Some methods **freeze the language model** to use the knowledge from LLMs for vision-to-language generation tasks (Tsimpoukelli et al., 2021; Alayrac et al., 2022; Chen et al., 2022a; Tiong et al., 2022; Guo et al., 2022). 
 
 ----
 
 # Modular Vision-Language Pre-training (2/2)
 
-* The key challenge in using a frozen LLM is to **align visual features to the text space**. 
-  * Frozen (Tsimpoukelli et al., 2021) **finetunes an image encoder** whose outputs are directly used as soft prompts for the LLM. 
-  * Flamingo (Alayrac et al., 2022) **inserts new cross-attention layers into the LLM** to inject visual features, and pre-trains the new layers on billions of image-text pairs. 
-  * Both methods adopt the **language modeling loss**, where the language model generates texts conditioned on the image.
-* Different from existing methods, BLIP-2 can effectively and efficiently leverage both **frozen image encoders and frozen LLMs** for various vision-language tasks, achieving stronger performance at a lower computation cost.
+- The key challenge in using a frozen LLM is to **align visual features to the text space**. 
+  - Frozen (Tsimpoukelli et al., 2021) **finetunes an image encoder** whose outputs are directly used as soft prompts for the LLM. 
+  - Flamingo (Alayrac et al., 2022) **inserts new cross-attention layers into the LLM** to inject visual features, and pre-trains the new layers on billions of image-text pairs. 
+  - Both methods adopt the **language modeling loss**, where the language model generates texts conditioned on the image.
+- Different from existing methods, BLIP-2 can effectively and efficiently leverage both **frozen image encoders and frozen LLMs** for various vision-language tasks, achieving stronger performance at a lower computation cost.
 
 ---
 
@@ -155,10 +155,10 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 ![center width: 400](figures/1.png)
 
 <!-- 
-* Q-Former:
-  * a lightweight Transformer
-  * a set of learnable query vectors to extract visual features from the frozen image encoder
-    * an information bottlenect between the frozen image encoder and the frozen LLM
+- Q-Former:
+  - a lightweight Transformer
+  - a set of learnable query vectors to extract visual features from the frozen image encoder
+    - an information bottlenect between the frozen image encoder and the frozen LLM
  -->
 
 ----
@@ -168,9 +168,9 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 ![](figures/2-1.png)
 
 <!-- 
-* Learnable queries:
-  * interact with frozen image features through cross-attention layers (inserted every other transformer block) (every other: 每隔一個)
-  * interact with the text through the same self-attention layers
+- Learnable queries:
+  - interact with frozen image features through cross-attention layers (inserted every other transformer block) (every other: 每隔一個)
+  - interact with the text through the same self-attention layers
 
  -->
 
@@ -178,14 +178,14 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 
 # Model Architecture: Q-Former
 
-* Depending on the pre-training task, we apply different self-attention masks to control query-text interaction. 
-* We initialize Q-Former with the pre-trained weights of $\text{BERT}_{\text{base}}$ (Devlin et al., 2019), whereas the cross-attention layers are randomly initialized. 
-* In total, Q-Former contains 188M parameters.
-  * Note that the queries are considered as model parameters.
-  * 32 queries
-  * dimension of each query: 768
-* The size of queries is much smaller than the size of frozen image features (e.g. 257×1024 for ViT-L/14). 
-  * This bottleneck architecture works together with our pre-training objectives into forcing the queries to extract visual information that is most relevant to the text.
+- Depending on the pre-training task, we apply different self-attention masks to control query-text interaction. 
+- We initialize Q-Former with the pre-trained weights of $\text{BERT}_{\text{base}}$ (Devlin et al., 2019), whereas the cross-attention layers are randomly initialized. 
+- In total, Q-Former contains 188M parameters.
+  - Note that the queries are considered as model parameters.
+  - 32 queries
+  - dimension of each query: 768
+- The size of queries is much smaller than the size of frozen image features (e.g. 257×1024 for ViT-L/14). 
+  - This bottleneck architecture works together with our pre-training objectives into forcing the queries to extract visual information that is most relevant to the text.
 
 ----
 
@@ -207,9 +207,9 @@ Link: https://aquastripe.github.io/slides/2024/BLIP-2/
 
 <!-- 
 假設有兩個 query tokens 兩個 text tokens，序列的順序是從上到下、從左到右，傳入 Q-Former 以後進行 masking 的情形：
-* Bi-directional Self-Attention Mask: 所有的 query tokens 與 text tokens 會互相計算 self-attention
-* Multi-modal Causal Self-Attention Mask: 所有的 query tokens 互相計算 self-attention，text 則是會看到前面的 query token (因為它代表圖片) 以及比該 text token 出現更早的 text token (有順序性，因為它的 task 是 text generation)
-* Uni-modal Self-Attention Mask: query tokens 可以看到所有 query tokens，text tokens 可以看到所有 text tokens，但是 query 與 text tokens 不會互相看到
+- Bi-directional Self-Attention Mask: 所有的 query tokens 與 text tokens 會互相計算 self-attention
+- Multi-modal Causal Self-Attention Mask: 所有的 query tokens 互相計算 self-attention，text 則是會看到前面的 query token (因為它代表圖片) 以及比該 text token 出現更早的 text token (有順序性，因為它的 task 是 text generation)
+- Uni-modal Self-Attention Mask: query tokens 可以看到所有 query tokens，text tokens 可以看到所有 text tokens，但是 query 與 text tokens 不會互相看到
  -->
 
 ----
@@ -416,9 +416,9 @@ Figure 4-4
 
 <!-- 
 
-* BLIP-2 comes secondary to Flamingo80B. We hypothesis that this is because OK-VQA focuses more on open-world knowledge than visual understanding
-  * 所以參數量較多的模型儲存更多的知識量
-* 更強的 image encoder 或 LLM 會讓結果更好
+- BLIP-2 comes secondary to Flamingo80B. We hypothesis that this is because OK-VQA focuses more on open-world knowledge than visual understanding
+  - 所以參數量較多的模型儲存更多的知識量
+- 更強的 image encoder 或 LLM 會讓結果更好
  -->
 
 ----
